@@ -1,0 +1,16 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata: {name: meta-business-agent}
+spec:
+ replicas: 3
+ selector: {matchLabels: {app: meta-business-agent}}
+ template:
+  metadata: {labels: {app: meta-business-agent}}
+  spec:
+   automountServiceAccountToken: false
+   containers:
+   - name: api
+     image: meta-business-agent:1.0.0
+     ports: [{containerPort: 8080}]
+     securityContext: {runAsNonRoot: true, allowPrivilegeEscalation: false, readOnlyRootFilesystem: true, capabilities: {drop: ["ALL"]}}
+     resources: {requests: {cpu: "500m", memory: "512Mi"}, limits: {cpu: "2", memory: "2Gi"}}
